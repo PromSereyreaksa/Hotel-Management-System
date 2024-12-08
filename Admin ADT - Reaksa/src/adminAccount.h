@@ -7,15 +7,17 @@
 #include <string>
 using namespace std;
 
+string username, email, passwd,
+    passwd_1; // declare global variable for other functions to check username;
 // CREATE ACCOUNT
-inline void createAdminAccount(const string &filename) {
+inline void createAdminAccount() {
   fstream file;
-  file.open(filename, ios::out);
-  string username, passwd, passwd_1, email;
-
+  string u;
+  file.open("adminAccount.csv", ios::out);
   cout << "Enter your username: ";
-  cin >> username;
-  file << "Username: " << username << "\n";
+  cin >> u;
+  file << "Username: " << u << "\n";
+
   do {
     if ((passwd.compare(passwd_1)) != 0) {
       cout << "Password doesn't match. Please re-enter your password.\n";
@@ -53,14 +55,23 @@ inline void createAdminAccount(const string &filename) {
   exit(0);
 }
 
+inline void forgotPassword();
+
 // LOGIN
 inline void login() {
+  cout << username;
   fstream file;
-  string username, passwd, userData, passwdData;
-  bool foundUser,
-      foundPasswd; // boolean to check if user exists / if passwd is correct
+  string userData, passwdData;
   int choice;
   file.open("adminAccount.csv", ios::in);
+
+  // handling no file case
+  if (!file.is_open()) {
+    cout << "Error: no user datafound. Please create an account";
+    exit(0);
+  }
+  bool foundUser,
+      foundPasswd; // boolean to check if user exists / if passwd is correct
 
   // file >> userData prints out every single word in the .csv file to compare
   // one by one
@@ -73,7 +84,7 @@ inline void login() {
       break;
     }
   }
-  if (foundUser != true) {
+  if (!foundUser) {
     cout << "Username not found" << endl;
     cout << "Would you like to create an account?" << endl;
     cout << "1.Yes\n2.No" << endl;
@@ -81,7 +92,7 @@ inline void login() {
     cin >> choice;
     switch (choice) {
     case 1:
-      createAdminAccount("adminAccount.csv");
+      createAdminAccount();
       break;
     case 2:
       exit(0);
@@ -100,7 +111,7 @@ inline void login() {
       break;
     }
   }
-  if (foundPasswd != true) {
+  if (!foundPasswd) {
     cout << "Incorrect Password" << endl;
     cout << "Would you like to reset your password?" << endl;
     cout << "1.Yes\n2.No" << endl;
@@ -108,10 +119,129 @@ inline void login() {
     cin >> choice;
     switch (choice) {
     case 1:
-      cout << "hi";
+      forgotPassword();
       break;
     case 2:
-      cout << "hi";
+      exit(0);
+      break;
+    default:
+      cout << "Invalid option. Exiting the program..";
+      return;
+    }
+  }
+  file.close();
+  exit(0);
+}
+
+inline void forgotPassword() {
+    fstream file;
+    string newPasswd, newPasswd_1, oTPv;
+    
+    // Generate OTP
+    srand(static_cast<unsigned int>(time(0)));
+    int OTP = rand() % 1000000;
+    cout << "Your OTP has been sent. Please check your file for the OTP." << endl;
+
+    // Write OTP to a file
+    file.open("OTP.csv", ios::out);
+    file << OTP; // Save the OTP in the file
+    file.close();
+
+    // Prompt user to enter OTP
+    cout << "Enter your OTP: ";
+    cin >> oTPv;
+
+    // Read the OTP from the file for verification
+    string storedOTP;
+    file.open("OTP.csv", ios::in);
+    if (file.is_open()) {
+        getline(file, storedOTP); // Read the OTP from the file
+        file.close();
+    } else {
+        cout << "Error: Unable to open OTP file." << endl;
+        return; // Exit if file can't be opened
+    }
+
+    // Check if the entered OTP matches the stored OTP
+    if (to_string(OTP) == oTPv) {
+        cout << "OTP verified successfully!" << endl;
+    } else {
+        cout << "Wrong OTP. Please try again later.";
+        return; // Exit if OTP is incorrect
+    }
+
+    // Update password
+    do {
+        cout << "Enter your new password: ";
+        cin >> newPasswd;
+        cout << "Confirm your new password: ";
+        cin >> newPasswd_1;
+
+        if (newPasswd == newPasswd_1) {
+            // Open the account file to read existing data
+            fstream readFile("adminAccount.csv", ios::in);
+            string line;
+            string updatedData;
+            bool usernameFound = false;
+
+            while (getline(readFile, line)) {
+                if (line.find("Username: " + username) != string::npos) {
+                    usernameFound = true; // Username found
+                    updatedData += line + "\n"; // Keep username line
+                    getline(readFile, line); // Read the next line (password)
+                    updatedData += "Password: " + newPasswd + "\n"; // Update password
+                } else {
+                    updatedData += line + "\n"; // Keep other lines unchanged
+                }
+            }
+            readFile.close();
+
+            // If the username was not found, handle accordingly (optional)
+            if (!usernameFound) {
+                cout << "Username not found. Unable to update password." << endl;
+                return;
+            }
+
+            // Write the updated data back to the file
+            fstream writeFile("adminAccount.csv", ios::out | ios::trunc);
+            writeFile << updatedData;
+            writeFile.close();
+
+            cout << "Password updated successfully!" << endl;
+        } else {
+            cout << "Passwords do not match. Please try again.\n";
+        }
+    } while (newPasswd != newPasswd_1);
+    exit(0);
+}
+inline void changePassword() {
+    fstream file;
+    int choice;
+    string newPasswd, newPasswd_1, passwdData;
+    bool foundPasswd;
+    file.open("adminAccount.csv", ios::in);
+    // Update password
+    retry:
+  cout << "Enter your current password: ";
+  cin >> passwd;
+  while (file >> passwdData) {
+    if (passwdData.compare(passwd) == 0) {
+      foundPasswd = true;
+      break;
+    }
+  }
+  if (!foundPasswd) {
+    cout << "Incorrect Password" << endl;
+    cout << "Would you like to reset your password?" << endl;
+    cout << "1.Yes\n2.Return to login" << endl;
+    cout << "Select an option: ";
+    cin >> choice;
+    switch (choice) {
+    case 1:
+      forgotPassword();
+      break;
+    case 2:
+      goto retry;
       break;
     default:
       cout << "Invalid option. Exiting the program..";
@@ -119,5 +249,46 @@ inline void login() {
     }
   }
   file.close();
-  exit(0);
+    do {
+        cout << "Enter your new password: ";
+        cin >> newPasswd;
+        cout << "Confirm your new password: ";
+        cin >> newPasswd_1;
+
+        if (newPasswd == newPasswd_1) {
+            // Open the account file to read existing data
+            fstream readFile("adminAccount.csv", ios::in);
+            string line;
+            string updatedData;
+            bool usernameFound = false;
+
+            while (getline(readFile, line)) {
+                if (line.find("Username: " + username) != string::npos) {
+                    usernameFound = true; // Username found
+                    updatedData += line + "\n"; // Keep username line
+                    getline(readFile, line); // Read the next line (password)
+                    updatedData += "Password: " + newPasswd + "\n"; // Update password
+                } else {
+                    updatedData += line + "\n"; // Keep other lines unchanged
+                }
+            }
+            readFile.close();
+
+            // If the username was not found, handle accordingly (optional)
+            if (!usernameFound) {
+                cout << "Username not found. Unable to update password." << endl;
+                return;
+            }
+
+            // Write the updated data back to the file
+            fstream writeFile("adminAccount.csv", ios::out | ios::trunc);
+            writeFile << updatedData;
+            writeFile.close();
+
+            cout << "Password updated successfully!" << endl;
+        } else {
+            cout << "Passwords do not match. Please try again.\n";
+        }
+    } while (newPasswd != newPasswd_1);
+    exit(0);
 }

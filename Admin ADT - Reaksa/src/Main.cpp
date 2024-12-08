@@ -1,4 +1,5 @@
 #include "adminAccount.h"
+#include <cstdlib>
 #include <iostream>
 #include <stdlib.h>
 using namespace std;
@@ -10,15 +11,16 @@ int main() {
   cout << "Please select an option." << endl;
   cout << "1.Register" << endl;
   cout << "2.Login" << endl;
-  cout << "3.Reset your password" << endl;
-  cout << "4.Exit" << endl;
+  cout << "3.Forgot password" << endl;
+  cout << "4.Change Password" << endl;
+  cout << "5.Exit" << endl;
   cout << "Select an option: ";
   cin >> choice;
   switch (choice) {
   case 1:
     system("clear");
     cout << "Welcome to the registration." << endl;
-    createAdminAccount("adminAccount.csv");
+    createAdminAccount();
     break;
   case 2:
     system("clear");
@@ -26,8 +28,13 @@ int main() {
     login();
   case 3:
     system("clear");
+  forgotPassword();
     break;
-  case 4:
+    case 4:
+    system("clear");
+    changePassword();
+    break;
+  case 5:
     system("clear");
     cout << "Exiting program....." << endl;
     break;
