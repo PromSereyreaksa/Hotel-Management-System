@@ -73,7 +73,7 @@ inline void login() {
   bool foundUser,
       foundPasswd; // boolean to check if user exists / if passwd is correct
 
-  // file >> userData prints out every single word in the .csv file to compare
+  // file >> userData prints out every singlewhile word in the .csv file to compare
   // one by one
 
   cout << "Enter your username: ";
@@ -106,7 +106,7 @@ inline void login() {
   cin >> passwd;
   while (file >> passwdData) {
     if (passwdData.compare(passwd) == 0) {
-      cout << "Login Success!";
+      cout << "Login Success!" << endl;
       foundPasswd = true;
       break;
     }
@@ -130,7 +130,7 @@ inline void login() {
     }
   }
   file.close();
-  exit(0);
+  
 }
 
 inline void forgotPassword() {

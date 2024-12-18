@@ -7,7 +7,6 @@ using namespace std;
 int main() {
   system("clear");
   int choice;
-  cout << "Welcome to the admin dashboard" << endl;
   cout << "Please select an option." << endl;
   cout << "1.Register" << endl;
   cout << "2.Login" << endl;
@@ -26,6 +25,7 @@ int main() {
     system("clear");
     cout << "Welcome back!" << endl;
     login();
+    goto adminDashboard;
   case 3:
     system("clear");
   forgotPassword();
@@ -42,4 +42,6 @@ int main() {
     cout << "Invalid option. Exiting the program..";
     exit(0);
   }
+  adminDashboard:
+  cout << "Welcome to the admin dashboard" << endl;
 }
