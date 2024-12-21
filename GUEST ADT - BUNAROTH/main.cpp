@@ -111,6 +111,21 @@ void saveReservation(const string &filename, const Reservation &res) {
     file.close();
 }
 
+// Helper function to save guest profiles to a CSV file
+void saveGuestProfiles(const string &filename) {
+    ofstream file(filename);
+    if (!file.is_open()) {
+        cerr << "Error: Could not open " << filename << endl;
+        return;
+    }
+    for (const auto &entry : guestProfiles) {
+        const GuestProfile &profile = entry.second;
+        file << profile.userID << "," << profile.name << "," << profile.password << ","
+             << profile.email << "," << profile.phoneNumber << endl;
+    }
+    file.close();
+}
+
 // Helper function to calculate the number of days between two dates
 int calculateDays(const string &checkIn, const string &checkOut) {
     struct tm tmIn = {}, tmOut = {};
@@ -153,6 +168,9 @@ void createAccount() {
 
     guestProfiles[profile.userID] = profile;
     cout << "Account created successfully! User ID: " << profile.userID << endl;
+
+    // Save the new account to guestprofile.csv
+    saveGuestProfiles("guestprofile.csv");
 }
 
 // Update an account
@@ -343,4 +361,3 @@ int main() {
 
     return 0;
 }
-
