@@ -108,125 +108,108 @@ int main() {
         displayMenu();
         cin >> choice;
 
-        // Handle the menu choices
-        switch (choice) {
-            case 1: {
-                // Create new guest profile
-                int id;
+        if (choice == 1) {
+            // Create new guest profile
+            int id;
+            string name, phone, email;
+            cout << "Enter Guest ID: ";
+            cin >> id;
+            cin.ignore();  // to ignore the newline character
+            cout << "Enter Name: ";
+            getline(cin, name);
+            cout << "Enter Phone: ";
+            getline(cin, phone);
+            cout << "Enter Email: ";
+            getline(cin, email);
+
+            guestMap[id] = GuestProfile(id, name, phone, email);
+            cout << "Guest Profile Created!" << endl;
+
+        } else if (choice == 2) {
+            // Update existing guest profile
+            int id;
+            cout << "Enter Guest ID to update: ";
+            cin >> id;
+            if (guestMap.find(id) != guestMap.end()) {
                 string name, phone, email;
-                cout << "Enter Guest ID: ";
-                cin >> id;
-                cin.ignore();  // to ignore the newline character
-                cout << "Enter Name: ";
+                cout << "Enter New Name: ";
+                cin.ignore();
                 getline(cin, name);
-                cout << "Enter Phone: ";
+                cout << "Enter New Phone: ";
                 getline(cin, phone);
-                cout << "Enter Email: ";
+                cout << "Enter New Email: ";
                 getline(cin, email);
-
-                guestMap[id] = GuestProfile(id, name, phone, email);
-                cout << "Guest Profile Created!" << endl;
-                break;
+                guestMap[id].name = name;
+                guestMap[id].phone = phone;
+                guestMap[id].email = email;
+                cout << "Guest Profile Updated!" << endl;
+            } else {
+                cout << "Guest not found!" << endl;
             }
 
-            case 2: {
-                // Update existing guest profile
-                int id;
-                cout << "Enter Guest ID to update: ";
-                cin >> id;
-                if (guestMap.find(id) != guestMap.end()) {
-                    string name, phone, email;
-                    cout << "Enter New Name: ";
-                    cin.ignore();
-                    getline(cin, name);
-                    cout << "Enter New Phone: ";
-                    getline(cin, phone);
-                    cout << "Enter New Email: ";
-                    getline(cin, email);
-                    guestMap[id].name = name;
-                    guestMap[id].phone = phone;
-                    guestMap[id].email = email;
-                    cout << "Guest Profile Updated!" << endl;
-                } else {
-                    cout << "Guest not found!" << endl;
+        } else if (choice == 3) {
+            // View guest profile
+            int id;
+            cout << "Enter Guest ID to view profile: ";
+            cin >> id;
+            if (guestMap.find(id) != guestMap.end()) {
+                cout << "Guest Profile Details:" << endl;
+                guestMap[id].displayProfile();
+            } else {
+                cout << "Guest not found!" << endl;
+            }
+
+        } else if (choice == 4) {
+            // Book a room
+            int guestId;
+            cout << "Enter your Guest ID: ";
+            cin >> guestId;
+            if (guestMap.find(guestId) != guestMap.end()) {
+                displayAvailableRooms();
+                int roomChoice;
+                cin >> roomChoice;
+                string roomType;
+                switch (roomChoice) {
+                    case 1: roomType = "Single Room"; break;
+                    case 2: roomType = "Double Room"; break;
+                    case 3: roomType = "Suite"; break;
+                    default: cout << "Invalid choice, try again." << endl; continue;
                 }
-                break;
+
+                string checkInDate, checkOutDate;
+                cout << "Enter Check-in Date (YYYY-MM-DD): ";
+                cin >> checkInDate;
+                cout << "Enter Check-out Date (YYYY-MM-DD): ";
+                cin >> checkOutDate;
+
+                addReservation(reservations, guestId, roomType, checkInDate, checkOutDate);
+            } else {
+                cout << "Guest not found!" << endl;
             }
 
-            case 3: {
-                // View guest profile
-                int id;
-                cout << "Enter Guest ID to view profile: ";
-                cin >> id;
-                if (guestMap.find(id) != guestMap.end()) {
-                    cout << "Guest Profile Details:" << endl;
-                    guestMap[id].displayProfile();
-                } else {
-                    cout << "Guest not found!" << endl;
+        } else if (choice == 5) {
+            // View booking history
+            int guestId;
+            cout << "Enter Guest ID to view booking history: ";
+            cin >> guestId;
+            bool found = false;
+            for (const auto& res : reservations) {
+                if (res.guestId == guestId) {
+                    res.displayReservation();
+                    found = true;
                 }
-                break;
+            }
+            if (!found) {
+                cout << "No bookings found!" << endl;
             }
 
-            case 4: {
-                // Book a room
-                int guestId;
-                cout << "Enter your Guest ID: ";
-                cin >> guestId;
-                if (guestMap.find(guestId) != guestMap.end()) {
-                    displayAvailableRooms();
-                    int roomChoice;
-                    cin >> roomChoice;
-                    string roomType;
-                    switch (roomChoice) {
-                        case 1: roomType = "Single Room"; break;
-                        case 2: roomType = "Double Room"; break;
-                        case 3: roomType = "Suite"; break;
-                        default: 
-                            cout << "Invalid choice, try again." << endl;
-                            continue;
-                    }
-
-                    string checkInDate, checkOutDate;
-                    cout << "Enter Check-in Date (YYYY-MM-DD): ";
-                    cin >> checkInDate;
-                    cout << "Enter Check-out Date (YYYY-MM-DD): ";
-                    cin >> checkOutDate;
-
-                    addReservation(reservations, guestId, roomType, checkInDate, checkOutDate);
-                } else {
-                    cout << "Guest not found!" << endl;
-                }
-                break;
-            }
-
-            case 5: {
-                // View booking history
-                int guestId;
-                cout << "Enter Guest ID to view booking history: ";
-                cin >> guestId;
-                bool found = false;
-                for (const auto& res : reservations) {
-                    if (res.guestId == guestId) {
-                        res.displayReservation();
-                        found = true;
-                    }
-                }
-                if (!found) {
-                    cout << "No bookings found!" << endl;
-                }
-                break;
-            }
-
-            case 6: {
-                // Exit the application
-                saveGuestProfiles(guestMap, "guest_profiles.csv");  // Save profiles to file
-                cout << "Thank you for using the CADT Hotel Management System!" << endl;
-                return 0;
-            }
-
-            default:
-                cout << "Invalid option, please try again." << endl;
-                break;
+        } else if (choice == 6) {
+            // Exit the application
+            saveGuestProfiles(guestMap, "guest_profiles.csv");  // Save profiles to file
+            cout << "Thank you for using the CADT Hotel Management System!" << endl;
+            break;
+        } else {
+            cout << "Invalid option, please try again." << endl;
         }
     }
 
