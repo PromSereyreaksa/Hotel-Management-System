@@ -11,12 +11,13 @@
 #include <iomanip>
 #include <ctime>
 #include <cstdlib>
+#include <limits>
 
 void clearScreen() {
 #ifdef _WIN32
-    system("cls");
+    system("cls");  // Windows
 #else
-    system("clear");
+    system("clear");  // Unix-based (Linux, MacOS)
 #endif
 }
 
@@ -50,6 +51,10 @@ struct Room {
 };
 
 // Function declarations
+void loadBookCounters(int &bookingCounter);
+void saveBookCounters(int bookingCounter);
+void loadUserCounters(int &userCounter);
+void saveUserCounters(int userCounter);
 void loadGuestProfiles(const string &filename);
 void loadRooms(const string &filename);
 void loadReservations(const string &filename);
@@ -73,4 +78,4 @@ extern unordered_map<string, GuestProfile> guestProfiles;
 extern list<Reservation> reservationHistory;
 extern map<string, Room> roomDatabase;
 
-#endif
+#endif // GUESTMANAGEMENT_H

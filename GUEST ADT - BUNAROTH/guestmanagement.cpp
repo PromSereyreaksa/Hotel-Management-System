@@ -5,13 +5,54 @@ list<Reservation> reservationHistory;
 map<string, Room> roomDatabase;
 
 
+void loadUserCounters(int &userCounter) {
+    ifstream file("DataBasefiles/usercounters.txt");
+    if (file.is_open()) {
+        file >>userCounter;
+        file.close();
+    } else {
+        userCounter = 1; // Default value if file doesn't exist
+    }
+}
+
+void loadBookCounters(int &bookingCounter) {
+    ifstream file("DataBasefiles/bookingcounters.txt");
+    if (file.is_open()) {
+        file >>bookingCounter;
+        file.close();
+    } else {
+        bookingCounter = 1; // Default value if file doesn't exist
+    }
+}
+
+void saveUserCounters(int userCounter) {
+    ofstream file("DataBasefiles/usercounters.txt");
+    if (file.is_open()) {
+        file << userCounter;
+        file.close();
+    } else {
+        cerr << "Error: Could not save counters." << endl;
+    }
+}
+
+void saveBookCounters(int bookingCounter) {
+    ofstream file("DataBasefiles/bookingcounters.txt");
+    if (file.is_open()) {
+        file <<bookingCounter;
+        file.close();
+    } else {
+        cerr << "Error: Could not save counters." << endl;
+    }
+}
+
 void loadGuestProfiles(const string &filename) {
-    ifstream file(filename);
+    ifstream file("DataBasefiles/" + filename);  // Corrected path
     if (!file.is_open()) {
         cerr << "Error: Could not open " << filename << endl;
         return;
     }
     string line;
+    getline(file, line);
     while (getline(file, line)) {
         stringstream ss(line);
         GuestProfile profile;
@@ -26,12 +67,13 @@ void loadGuestProfiles(const string &filename) {
 }
 
 void loadRooms(const string &filename) {
-    ifstream file(filename);
+    ifstream file("DataBasefiles/" + filename);  // Corrected path
     if (!file.is_open()) {
         cerr << "Error: Could not open " << filename << endl;
         return;
     }
     string line;
+    getline(file, line);
     while (getline(file, line)) {
         stringstream ss(line);
         Room room;
@@ -46,12 +88,13 @@ void loadRooms(const string &filename) {
 }
 
 void loadReservations(const string &filename) {
-    ifstream file(filename);
+    ifstream file("DataBasefiles/" + filename);  // Corrected path
     if (!file.is_open()) {
         cerr << "Error: Could not open " << filename << endl;
         return;
     }
     string line;
+    getline(file, line);
     while (getline(file, line)) {
         stringstream ss(line);
         Reservation res;
@@ -69,7 +112,7 @@ void loadReservations(const string &filename) {
 }
 
 void saveRooms(const string &filename) {
-    ofstream file(filename);
+    ofstream file("DataBasefiles/" + filename, ios::trunc);  // Corrected path
     if (!file.is_open()) {
         cerr << "Error: Could not open " << filename << endl;
         return;
@@ -81,7 +124,7 @@ void saveRooms(const string &filename) {
 }
 
 void saveReservation(const string &filename, const Reservation &res) {
-    ofstream file(filename, ios::app);
+    ofstream file("DataBasefiles/" + filename, ios::app);  // Corrected path
     if (!file.is_open()) {
         cerr << "Error: Could not open " << filename << endl;
         return;
@@ -92,7 +135,7 @@ void saveReservation(const string &filename, const Reservation &res) {
 }
 
 void saveGuestProfiles(const string &filename) {
-    ofstream file(filename);
+    ofstream file("DataBasefiles/" + filename, ios::app);  // Corrected path
     if (!file.is_open()) {
         cerr << "Error: Could not open " << filename << endl;
         return;
@@ -106,13 +149,13 @@ void saveGuestProfiles(const string &filename) {
 }
 
 void saveBookingHistory(const string &filename) {
-    ofstream file(filename);
+    ofstream file("DataBasefiles/" + filename, ios::trunc);  // Corrected path
     if (!file.is_open()) {
         cerr << "Error: Could not open " << filename << endl;
         return;
     }
     for (const auto &res : reservationHistory) {
-        file << res.bookingID << "," << res.name << "," << res.roomID << "," << res.roomType << ","
+        file << res.bookingID << "," << res.name << "," << res.roomID << "," << res.roomType << "," 
              << res.checkInDate << "," << res.checkOutDate << "," << res.totalPrice << endl;
     }
     file.close();
@@ -121,12 +164,22 @@ void saveBookingHistory(const string &filename) {
 int calculateDays(const string &checkIn, const string &checkOut) {
     struct tm tmIn = {}, tmOut = {};
     istringstream ssIn(checkIn), ssOut(checkOut);
+
+    // Parse the input dates into tm structures
     ssIn >> get_time(&tmIn, "%d-%m-%Y");
     ssOut >> get_time(&tmOut, "%d-%m-%Y");
+
+    // Convert tm structures to time_t (which is in seconds since the epoch)
     time_t timeIn = mktime(&tmIn);
     time_t timeOut = mktime(&tmOut);
-    return difftime(timeOut, timeIn);
+
+    // Calculate the difference in seconds and convert to days
+    double secondsDiff = difftime(timeOut, timeIn);
+    int daysDiff = secondsDiff / (60 * 60 * 24);  // Convert seconds to days
+
+    return daysDiff;
 }
+
 
 string getDateInput() {
     int day, month, year;
@@ -150,6 +203,8 @@ string generateID(const string &prefix, T counter) {
 
 void createAccount() {
     static int userCounter = 1;
+    loadUserCounters(userCounter);
+
     GuestProfile profile;
     profile.userID = generateID("AID", userCounter++);
 
@@ -166,6 +221,7 @@ void createAccount() {
     cout << "Account created successfully! User ID: " << profile.userID << endl;
 
     saveGuestProfiles("guestprofile.csv");
+    saveUserCounters(userCounter);
     system("pause");
 }
 
@@ -237,6 +293,7 @@ void checkAvailableRooms() {
 
 void bookRoom() {
     static int bookingCounter = 1;
+    loadBookCounters(bookingCounter);
     Reservation res;
 
     cout << "Enter UserID: ";
@@ -274,6 +331,7 @@ void bookRoom() {
         saveReservation("Reservation.csv", res);
 
         saveRooms("room.csv");
+        saveBookCounters(bookingCounter);
 
         clearScreen();
         cout << "Booking Successful!\n";
@@ -295,14 +353,15 @@ void bookRoom() {
 
 void viewBookingHistory(const string &userID) {
     cout << "\n" << string(40, '-') << endl;
-    cout << "Booking History for User ID: " << userID << endl;
+    cout << "Booking History for User: " << userID << endl;
+    cout << "Booking ID\tRoom ID\tRoom Type\tPrice\n";
+    cout << string(40, '-') << endl;
     for (const auto &res : reservationHistory) {
         if (res.userID == userID) {
-            cout << "Booking ID: " << res.bookingID << "\nName: " << res.name << "\nUserID: " << res.userID << "\nRoom ID: " << res.roomID
-                 << "\nCheck-In: " << res.checkInDate << "\nCheck-Out: " << res.checkOutDate
-                 << "\nTotal Price: $" << fixed << setprecision(2) << res.totalPrice << endl;
-            cout << string(40, '-') << endl;
+            cout << res.bookingID << "\t" << res.roomID << "\t" << res.roomType << "\t$" 
+                 << fixed << setprecision(2) << res.totalPrice << endl;
         }
     }
+    cout << string(40, '-') << endl;
     system("pause");
 }

@@ -1,6 +1,8 @@
 #include "guestmanagement.cpp"
 
+
 int main() {
+    // Load data from CSV files into memory
     loadRooms("room.csv");
     loadReservations("Reservation.csv");
     loadGuestProfiles("guestprofile.csv");
