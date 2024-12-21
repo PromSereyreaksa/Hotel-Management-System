@@ -4,7 +4,6 @@ unordered_map<string, GuestProfile> guestProfiles;
 list<Reservation> reservationHistory;
 map<string, Room> roomDatabase;
 
-// Function definitions
 
 void loadGuestProfiles(const string &filename) {
     ifstream file(filename);
@@ -58,6 +57,7 @@ void loadReservations(const string &filename) {
         Reservation res;
         getline(ss, res.bookingID, ',');
         getline(ss, res.name, ',');
+        getline(ss, res.userID, ',');
         getline(ss, res.roomID, ',');
         getline(ss, res.roomType, ',');
         getline(ss, res.checkInDate, ',');
@@ -86,7 +86,7 @@ void saveReservation(const string &filename, const Reservation &res) {
         cerr << "Error: Could not open " << filename << endl;
         return;
     }
-    file << res.bookingID << "," << res.name << "," << res.roomID << "," << res.roomType << "," 
+    file << res.bookingID << "," << res.name << "," << res.userID << "," << res.roomID << "," << res.roomType << "," 
          << res.checkInDate << "," << res.checkOutDate << "," << res.totalPrice << endl;
     file.close();
 }
@@ -125,7 +125,7 @@ int calculateDays(const string &checkIn, const string &checkOut) {
     ssOut >> get_time(&tmOut, "%d-%m-%Y");
     time_t timeIn = mktime(&tmIn);
     time_t timeOut = mktime(&tmOut);
-    return difftime(timeOut, timeIn) / (60 * 60 * 24);
+    return difftime(timeOut, timeIn);
 }
 
 string getDateInput() {
@@ -151,7 +151,7 @@ string generateID(const string &prefix, T counter) {
 void createAccount() {
     static int userCounter = 1;
     GuestProfile profile;
-    profile.userID = generateID("aid", userCounter++);
+    profile.userID = generateID("AID", userCounter++);
 
     cout << "Enter Name: ";
     cin >> profile.name;
@@ -165,8 +165,8 @@ void createAccount() {
     guestProfiles[profile.userID] = profile;
     cout << "Account created successfully! User ID: " << profile.userID << endl;
 
-    // Save the new account to guestprofile.csv
     saveGuestProfiles("guestprofile.csv");
+    system("pause");
 }
 
 void updateAccount() {
@@ -194,6 +194,7 @@ void updateAccount() {
     } else {
         cout << "User ID not found!" << endl;
     }
+    system("pause");
 }
 
 void viewAccount() {
@@ -217,6 +218,7 @@ void viewAccount() {
     } else {
         cout << "User ID not found!" << endl;
     }
+    system("pause");
 }
 
 void checkAvailableRooms() {
@@ -230,14 +232,25 @@ void checkAvailableRooms() {
         }
     }
     cout << string(40, '-') << endl;
+    system("pause");
 }
 
 void bookRoom() {
     static int bookingCounter = 1;
     Reservation res;
 
-    cout << "Enter Name: ";
-    cin >> res.name;
+    cout << "Enter UserID: ";
+    cin >> res.userID;
+
+    if (guestProfiles.find(res.userID) != guestProfiles.end()) {
+        res.name = guestProfiles[res.userID].name;
+        cout << "User Name: " << res.name << endl;
+    } else {
+        cout << "UserID not found! Please make sure the UserID is correct." << endl;
+        system("pause");
+        return;
+    }
+
     cout << "Enter Check-In Date:" << endl;
     res.checkInDate = getDateInput();
     cout << "Enter Check-Out Date:" << endl;
@@ -253,16 +266,13 @@ void bookRoom() {
     if (roomDatabase.find(res.roomID) != roomDatabase.end() && roomDatabase[res.roomID].status == "available") {
         res.roomType = roomDatabase[res.roomID].roomType;
         res.totalPrice = roomDatabase[res.roomID].price * calculateDays(res.checkInDate, res.checkOutDate);
-        res.bookingID = generateID("bid", bookingCounter++);
+        res.bookingID = generateID("BID", bookingCounter++);
 
-        // Mark the room as unavailable
         roomDatabase[res.roomID].status = "unavailable";
 
-        // Save reservation
         reservationHistory.push_back(res);
         saveReservation("Reservation.csv", res);
 
-        // Update room data in file
         saveRooms("room.csv");
 
         clearScreen();
@@ -280,17 +290,19 @@ void bookRoom() {
     } else {
         cout << "Room not available or invalid Room ID!" << endl;
     }
+    system("pause");
 }
 
 void viewBookingHistory(const string &userID) {
     cout << "\n" << string(40, '-') << endl;
     cout << "Booking History for User ID: " << userID << endl;
     for (const auto &res : reservationHistory) {
-        if (res.name == userID) {
-            cout << "Booking ID: " << res.bookingID << "\nName: " << res.name << "\nRoom ID: " << res.roomID
+        if (res.userID == userID) {
+            cout << "Booking ID: " << res.bookingID << "\nName: " << res.name << "\nUserID: " << res.userID << "\nRoom ID: " << res.roomID
                  << "\nCheck-In: " << res.checkInDate << "\nCheck-Out: " << res.checkOutDate
                  << "\nTotal Price: $" << fixed << setprecision(2) << res.totalPrice << endl;
             cout << string(40, '-') << endl;
         }
     }
+    system("pause");
 }

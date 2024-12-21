@@ -14,9 +14,9 @@
 
 void clearScreen() {
 #ifdef _WIN32
-    system("cls");  // Windows
+    system("cls");
 #else
-    system("clear");  // Unix-based (Linux, MacOS)
+    system("clear");
 #endif
 }
 
@@ -34,6 +34,7 @@ struct GuestProfile {
 struct Reservation {
     string bookingID;
     string name;
+    string userID;
     string roomID;
     string roomType;
     string checkInDate;
@@ -72,4 +73,4 @@ extern unordered_map<string, GuestProfile> guestProfiles;
 extern list<Reservation> reservationHistory;
 extern map<string, Room> roomDatabase;
 
-#endif // GUESTMANAGEMENT_H
+#endif
