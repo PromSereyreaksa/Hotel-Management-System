@@ -1,6 +1,5 @@
 #include "guestmanagement.h"
 
-// Data structures
 unordered_map<string, GuestProfile> guestProfiles;
 list<Reservation> reservationHistory;
 map<string, Room> roomDatabase;
@@ -100,7 +99,7 @@ void saveGuestProfiles(const string &filename) {
     }
     for (const auto &entry : guestProfiles) {
         const GuestProfile &profile = entry.second;
-        file << profile.userID << "," << profile.name << "," << profile.password << ","
+        file << profile.userID << "," << profile.name << "," << profile.password << "," 
              << profile.email << "," << profile.phoneNumber << endl;
     }
     file.close();
@@ -113,7 +112,7 @@ void saveBookingHistory(const string &filename) {
         return;
     }
     for (const auto &res : reservationHistory) {
-        file << res.bookingID << "," << res.name << "," << res.roomID << "," << res.roomType << "," 
+        file << res.bookingID << "," << res.name << "," << res.roomID << "," << res.roomType << ","
              << res.checkInDate << "," << res.checkOutDate << "," << res.totalPrice << endl;
     }
     file.close();
