@@ -11,9 +11,20 @@
 #include <map>
 #include <iomanip>
 #include <ctime>
+#include <cstdlib>
+
+
+void clearScreen() {
+#ifdef _WIN32
+    system("cls");  // Windows
+#else
+    system("clear");  // Unix-based (Linux, MacOS)
+#endif
+}
 
 using namespace std;
 
+// Data structures
 struct GuestProfile {
     string userID;
     string name;
@@ -22,16 +33,8 @@ struct GuestProfile {
     string phoneNumber;
 };
 
-struct Room {
-    string roomID;
-    string roomType;
-    double price;
-    string status; // available or unavailable
-};
-
 struct Reservation {
     string bookingID;
-    string userID;
     string name;
     string roomID;
     string roomType;
@@ -40,27 +43,35 @@ struct Reservation {
     double totalPrice;
 };
 
-extern unordered_map<string, GuestProfile> guestProfiles;
-extern list<Reservation> reservationHistory;
-extern queue<Reservation> bookingQueue;
-extern map<string, Room> roomDatabase;
+struct Room {
+    string roomID;
+    string roomType;
+    double price;
+    string status;
+};
 
+// Function declarations
+void loadGuestProfiles(const string &filename);
 void loadRooms(const string &filename);
 void loadReservations(const string &filename);
-void loadGuestProfiles(const string &filename);
 void saveRooms(const string &filename);
 void saveReservation(const string &filename, const Reservation &res);
 void saveGuestProfiles(const string &filename);
 void saveBookingHistory(const string &filename);
-int calculateDays(const string &checkIn, const string &checkOut);
-string getDateInput();
-void clearScreen();
-template <typename T> string generateID(const string &prefix, T counter);
-void createAccount();
-void updateAccount();
-void viewAccount();
 void checkAvailableRooms();
 void bookRoom();
 void viewBookingHistory(const string &userID);
+int calculateDays(const string &checkIn, const string &checkOut);
+string getDateInput();
+template <typename T>
+string generateID(const string &prefix, T counter);
+void createAccount();
+void updateAccount();
+void viewAccount();
+void clearScreen();
+
+extern unordered_map<string, GuestProfile> guestProfiles;
+extern list<Reservation> reservationHistory;
+extern map<string, Room> roomDatabase;
 
 #endif // GUESTMANAGEMENT_H
