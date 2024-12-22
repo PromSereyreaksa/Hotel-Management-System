@@ -484,13 +484,14 @@ void viewBookingHistory(const string &userID) {
 }
 
 void displayGuestMenu() {
+    
+    // Load data from CSV files into memory
+    loadRooms("room.csv");
+    loadReservations("Reservation.csv");
+    loadGuestProfiles("guestprofile.csv");
 
     int choice;
     do {
-        // Load data from CSV files into memory
-        loadRooms("room.csv");
-        loadReservations("Reservation.csv");
-        loadGuestProfiles("guestprofile.csv");
         clearScreen();
         cout << "\n" << string(40, '=') << endl;
         cout << "Hotel Management System:\n";
