@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": ".",
-      "program": "build/Debug/outDebug",
+      "cwd": "c:/Users/bnfac/OneDrive/Desktop/Hotel-Management-System/GUEST ADT - BUNAROTH/DataBasefiles",
+      "program": "c:/Users/bnfac/OneDrive/Desktop/Hotel-Management-System/GUEST ADT - BUNAROTH/DataBasefiles/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

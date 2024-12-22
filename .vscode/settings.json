@@ -64,6 +64,7 @@
     "cstdlib": "cpp",
     "iosfwd": "cpp",
     "fstream": "cpp",
-    "limits": "cpp"
+    "limits": "cpp",
+    "array": "cpp"
   }
 }

@@ -72,9 +72,12 @@ string generateID(const string &prefix, T counter);
 void createAccount();
 void updateAccount();
 void viewAccount();
+void editBooking();
 void clearScreen();
+void displayGuestMenu();
 
-extern unordered_map<string, GuestProfile> guestProfiles;
+extern map<string, GuestProfile> guestProfiles;
+extern map<string, Reservation> editReservationHistory;
 extern list<Reservation> reservationHistory;
 extern map<string, Room> roomDatabase;
 

@@ -1,1 +1,3 @@
 BookingID,UserName,UserID,RoomID,RoomType,CheckinDate,CheckoutDate,TotalPrice
+BID001,Wukong,AID003,RID001,single,12-02-2025,15-02-2025,120
+BID002,BenTen,AID001,RID002,single,29-02-2025,01-03-2025,0
