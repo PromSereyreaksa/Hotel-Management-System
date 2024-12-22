@@ -122,7 +122,9 @@ void saveRooms(const string &filename) {
     }
     file <<"RoomID,RoomType,Price,RoomStatus"<< endl;
     for (const auto &room : roomDatabase) {
-        file << room.second.roomID << "," << room.second.roomType << "," << room.second.price << "," << room.second.status << endl;
+        if (!room.second.roomID.empty() && !room.second.roomType.empty() && !room.second.status.empty()) {
+            file << room.second.roomID << "," << room.second.roomType << "," << room.second.price << "," << room.second.status << endl;
+        }
     }
     file.close();
 }
@@ -166,10 +168,10 @@ void saveBookingHistory(const string &filename) {
     file <<"BookingID,UserName,UserID,RoomID,RoomType,CheckinDate,CheckoutDate,TotalPrice"<< endl;
     for (const auto &entry : editReservationHistory) {
         const Reservation &res = entry.second;
-        if (!res.bookingID.empty() && !res.name.empty() && !res.roomID.empty() && !res.roomType.empty() && !res.checkInDate.empty() && !res.checkOutDate.empty() && !res.totalPrice.empty()) {
+        if (!res.bookingID.empty() && !res.name.empty() && !res.roomID.empty() && !res.roomType.empty() && !res.checkInDate.empty() && !res.checkOutDate.empty()) {
             file << res.bookingID << "," << res.name << "," << res.roomID << "," << res.roomType << "," 
                 << res.checkInDate << "," << res.checkOutDate << "," << res.totalPrice << endl;
-    }
+        }
     }
     file.close();
 }
@@ -191,10 +193,9 @@ int calculateDays(const string &checkIn, const string &checkOut) {
     double secondsDiff = difftime(timeOut, timeIn);
     int daysDiff = secondsDiff / (60 * 60 * 24);  // Convert seconds to days
 
-    // Include the check-in day as part of the total
+    // Include the check-in day as part of the total (adding 1)
     return daysDiff;
 }
-
 
 string getDateInput() {
     int day, month, year;
@@ -483,13 +484,13 @@ void viewBookingHistory(const string &userID) {
 }
 
 void displayGuestMenu() {
-    // Load data from CSV files into memory
-    loadRooms("room.csv");
-    loadReservations("Reservation.csv");
-    loadGuestProfiles("guestprofile.csv");
 
     int choice;
     do {
+        // Load data from CSV files into memory
+        loadRooms("room.csv");
+        loadReservations("Reservation.csv");
+        loadGuestProfiles("guestprofile.csv");
         clearScreen();
         cout << "\n" << string(40, '=') << endl;
         cout << "Hotel Management System:\n";
