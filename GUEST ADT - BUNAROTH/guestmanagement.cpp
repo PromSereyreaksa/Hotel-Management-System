@@ -347,6 +347,7 @@ void bookRoom() {
         res.bookingID = generateID("BID", bookingCounter++);
 
         roomDatabase[res.roomID].status = "unavailable";
+        editReservationHistory[res.bookingID] = res;
 
         reservationHistory.push_back(res);
         saveReservation("Reservation.csv", res);
