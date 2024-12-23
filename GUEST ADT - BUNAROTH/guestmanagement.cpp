@@ -168,8 +168,8 @@ void saveBookingHistory(const string &filename) {
     file <<"BookingID,UserName,UserID,RoomID,RoomType,CheckinDate,CheckoutDate,TotalPrice"<< endl;
     for (const auto &entry : editReservationHistory) {
         const Reservation &res = entry.second;
-        if (!res.bookingID.empty() && !res.name.empty() && !res.roomID.empty() && !res.roomType.empty() && !res.checkInDate.empty() && !res.checkOutDate.empty()) {
-            file << res.bookingID << "," << res.name << "," << res.roomID << "," << res.roomType << "," 
+        if (!res.bookingID.empty() && !res.name.empty() && !res.userID.empty() && !res.roomID.empty() && !res.roomType.empty() && !res.checkInDate.empty() && !res.checkOutDate.empty()) {
+            file << res.bookingID << "," << res.name << "," << res.userID << "," << res.roomID << "," << res.roomType << "," 
                 << res.checkInDate << "," << res.checkOutDate << "," << res.totalPrice << endl;
         }
     }
@@ -300,11 +300,22 @@ void checkAvailableRooms() {
     cout << "Available Rooms:\n";
     cout << "Room ID\tType\tPrice\n";
     cout << string(40, '-') << endl;
+    bool hasAvailableRooms = false;
+
     for (const auto &room : roomDatabase) {
         if (room.second.status == "available") {
             cout << room.second.roomID << "\t" << room.second.roomType << "\t" << room.second.price << endl;
+            hasAvailableRooms = false;
         }
     }
+
+    if (!hasAvailableRooms) {
+        // If no rooms are available, output the message and skip to the next loop iteration
+        cout << "There's no available room!" << endl;
+        system("pause");
+        return; // Exit the function to skip to the next iteration of the calling loop
+    }
+
     cout << string(40, '-') << endl;
     system("pause");
 }
@@ -403,12 +414,12 @@ void editBooking() {
 
         switch (choice) {
             case 1: {
-                cout << "Enter new Check-In Date (dd-mm-yyyy): ";
+                cout << "Enter new Check-In Date (dd-mm-yyyy):"<< endl;
                 res.checkInDate = getDateInput();
                 break;
             }
             case 2: {
-                cout << "Enter new Check-Out Date (dd-mm-yyyy): ";
+                cout << "Enter new Check-Out Date (dd-mm-yyyy):"<< endl;
                 res.checkOutDate = getDateInput();
                 break;
             }
