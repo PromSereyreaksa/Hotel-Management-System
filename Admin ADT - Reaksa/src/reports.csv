@@ -1,0 +1,101 @@
+ReportID,Type,Date,Data
+1,Revenue,2023-07-25,Discount: $781
+2,Occupancy,2023-05-06,Room 209 cleaned
+3,Occupancy,2023-04-16,Room 367 booked
+4,Revenue,2023-08-17,Refund: $403
+5,Revenue,2023-08-20,Revenue: $294
+6,Revenue,2023-05-24,Revenue: $661
+7,Occupancy,2023-02-06,Room 124 booked
+8,Revenue,2023-01-25,Discount: $272
+9,Occupancy,2023-04-21,Room 151 booked
+10,Occupancy,2023-10-16,Room 356 cleaned
+11,Occupancy,2023-11-21,Room 472 checked out
+12,Occupancy,2023-06-08,Room 122 booked
+13,Revenue,2023-11-20,Revenue: $932
+14,Revenue,2023-05-18,Revenue: $945
+15,Revenue,2023-07-23,Revenue: $880
+16,Occupancy,2023-06-08,Room 491 checked out
+17,Revenue,2023-04-22,Revenue: $395
+18,Revenue,2023-05-18,Revenue: $537
+19,Occupancy,2023-05-08,Room 193 cleaned
+20,Occupancy,2023-10-03,Room 194 checked out
+21,Occupancy,2023-12-12,Room 132 booked
+22,Occupancy,2023-07-26,Room 373 booked
+23,Occupancy,2023-04-04,Room 296 booked
+24,Occupancy,2023-07-29,Room 165 checked out
+25,Revenue,2023-02-03,Discount: $660
+26,Revenue,2023-04-14,Refund: $793
+27,Occupancy,2023-08-31,Room 119 booked
+28,Occupancy,2023-04-03,Room 151 booked
+29,Revenue,2023-11-26,Refund: $807
+30,Revenue,2023-11-21,Discount: $752
+31,Occupancy,2023-09-12,Room 326 checked out
+32,Occupancy,2023-10-19,Room 178 checked out
+33,Occupancy,2023-07-29,Room 169 checked out
+34,Revenue,2023-11-19,Refund: $870
+35,Revenue,2023-01-12,Refund: $417
+36,Revenue,2023-12-09,Refund: $560
+37,Occupancy,2023-04-04,Room 154 booked
+38,Revenue,2023-11-28,Discount: $842
+39,Revenue,2023-06-16,Revenue: $93
+40,Occupancy,2023-06-29,Room 405 cleaned
+41,Revenue,2023-12-18,Refund: $51
+42,Occupancy,2023-06-25,Room 389 checked out
+43,Revenue,2023-07-16,Refund: $887
+44,Occupancy,2023-02-05,Room 202 booked
+45,Occupancy,2023-01-13,Room 454 checked out
+46,Revenue,2023-06-01,Revenue: $567
+47,Occupancy,2023-12-21,Room 468 checked out
+48,Revenue,2023-01-10,Discount: $505
+49,Occupancy,2023-11-09,Room 218 cleaned
+50,Occupancy,2023-04-14,Room 481 cleaned
+51,Revenue,2023-04-20,Revenue: $290
+52,Occupancy,2023-04-06,Room 437 checked out
+53,Revenue,2023-01-27,Discount: $347
+54,Revenue,2023-05-29,Revenue: $211
+55,Occupancy,2023-08-17,Room 252 checked out
+56,Revenue,2023-06-28,Revenue: $855
+57,Revenue,2023-12-06,Revenue: $118
+58,Occupancy,2023-02-11,Room 268 checked out
+59,Revenue,2023-04-17,Discount: $409
+60,Revenue,2023-01-27,Discount: $461
+61,Revenue,2023-08-26,Discount: $179
+62,Occupancy,2023-05-06,Room 410 cleaned
+63,Revenue,2023-05-08,Discount: $543
+64,Revenue,2023-03-14,Revenue: $682
+65,Revenue,2023-07-01,Refund: $571
+66,Revenue,2023-06-16,Discount: $854
+67,Occupancy,2023-06-20,Room 314 checked out
+68,Revenue,2023-09-22,Discount: $205
+69,Occupancy,2023-04-22,Room 359 checked out
+70,Occupancy,2023-08-04,Room 409 booked
+71,Occupancy,2023-12-23,Room 155 cleaned
+72,Revenue,2023-01-14,Refund: $353
+73,Occupancy,2023-05-19,Room 239 cleaned
+74,Occupancy,2023-05-22,Room 197 cleaned
+75,Revenue,2023-09-17,Refund: $456
+76,Occupancy,2023-11-11,Room 219 checked out
+77,Revenue,2023-12-20,Refund: $600
+78,Occupancy,2023-07-21,Room 378 checked out
+79,Occupancy,2023-11-19,Room 456 booked
+80,Revenue,2023-08-11,Revenue: $669
+81,Revenue,2023-03-26,Revenue: $642
+82,Occupancy,2023-02-05,Room 466 cleaned
+83,Occupancy,2023-04-02,Room 401 booked
+84,Revenue,2023-03-19,Refund: $674
+85,Occupancy,2023-07-24,Room 270 cleaned
+86,Occupancy,2023-11-05,Room 353 checked out
+87,Revenue,2023-06-08,Discount: $486
+88,Revenue,2023-11-18,Discount: $623
+89,Revenue,2023-01-17,Discount: $786
+90,Revenue,2023-01-16,Refund: $740
+91,Occupancy,2023-11-17,Room 221 booked
+92,Occupancy,2023-10-18,Room 226 checked out
+93,Occupancy,2023-08-28,Room 396 booked
+94,Occupancy,2023-09-22,Room 323 booked
+95,Revenue,2023-02-26,Refund: $268
+96,Occupancy,2023-07-22,Room 250 checked out
+97,Revenue,2023-03-27,Revenue: $396
+98,Revenue,2023-04-07,Revenue: $99
+99,Revenue,2023-03-07,Revenue: $775
+100,Revenue,2023-05-10,Discount: $308
