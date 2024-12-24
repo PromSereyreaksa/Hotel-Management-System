@@ -1,2 +1,5 @@
 BookingID,UserName,UserID,RoomID,RoomType,CheckinDate,CheckoutDate,TotalPrice
-
+<<<<<<< Updated upstream
+=======
+BID001,Madona,AID006,RID015,triple,01-02-2025,21-03-2025,3360
+>>>>>>> Stashed changes

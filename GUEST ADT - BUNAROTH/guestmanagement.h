@@ -59,7 +59,6 @@ void loadGuestProfiles(const string &filename);
 void loadRooms(const string &filename);
 void loadReservations(const string &filename);
 void saveRooms(const string &filename);
-void saveReservation(const string &filename, const Reservation &res);
 void saveGuestProfiles(const string &filename);
 void saveBookingHistory(const string &filename);
 void checkAvailableRooms();
@@ -69,6 +68,7 @@ int calculateDays(const string &checkIn, const string &checkOut);
 string getDateInput();
 template <typename T>
 string generateID(const string &prefix, T counter);
+void loginAccount();
 void createAccount();
 void updateAccount();
 void viewAccount();
@@ -77,8 +77,7 @@ void clearScreen();
 void displayGuestMenu();
 
 extern map<string, GuestProfile> guestProfiles;
-extern map<string, Reservation> editReservationHistory;
-extern list<Reservation> reservationHistory;
+extern map<string, Reservation> reservationHistory;
 extern map<string, Room> roomDatabase;
 
 #endif // GUESTMANAGEMENT_H

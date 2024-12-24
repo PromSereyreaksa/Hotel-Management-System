@@ -1,1 +1,13 @@
 UserID,UserName,Password,Gmail,PhoneNumber
+<<<<<<< Updated upstream
+AID001,gg,gg,gg,g
+=======
+AID002,Glu,glu100100,glu@gmail.com,02883837
+AID001,Jack,jack100100,jack@gmail.com,0973993723
+AID007,Ketty,ketty100,ketty@gmail.com,09738847212
+AID005,Leka,leka100100,kjla,lkj
+AID006,Madona,madona100,jjjjjj,jjjjjj
+AID008,Nak,nak100,kjl;,lkj
+AID004,Rain,rain100100,lkj,lkj
+AID003,jds,lkjf,lkadfj,lkdfj
+>>>>>>> Stashed changes
