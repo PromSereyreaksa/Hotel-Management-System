@@ -77,8 +77,7 @@ void clearScreen();
 void displayGuestMenu();
 
 extern map<string, GuestProfile> guestProfiles;
-extern map<string, Reservation> editReservationHistory;
-extern list<Reservation> reservationHistory;
+extern map<string, Reservation> reservationHistory;
 extern map<string, Room> roomDatabase;
 
 #endif // GUESTMANAGEMENT_H

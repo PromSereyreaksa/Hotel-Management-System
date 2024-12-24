@@ -1,10 +1,8 @@
 #include "guestmanagement.h"
 
 map<string, GuestProfile> guestProfiles;
-map<string, Reservation> editReservationHistory;
-list<Reservation> reservationHistory;
+map<string, Reservation> reservationHistory;
 map<string, Room> roomDatabase;
-
 
 void loadUserCounters(int &userCounter) {
     ifstream file("DataBasefiles/usercounters.txt");
@@ -15,7 +13,6 @@ void loadUserCounters(int &userCounter) {
         userCounter = 1; // Default value if file doesn't exist
     }
 }
-
 void loadBookCounters(int &bookingCounter) {
     ifstream file("DataBasefiles/bookingcounters.txt");
     if (file.is_open()) {
@@ -25,7 +22,6 @@ void loadBookCounters(int &bookingCounter) {
         bookingCounter = 1; // Default value if file doesn't exist
     }
 }
-
 void saveUserCounters(int userCounter) {
     ofstream file("DataBasefiles/usercounters.txt");
     if (file.is_open()) {
@@ -35,7 +31,6 @@ void saveUserCounters(int userCounter) {
         cerr << "Error: Could not save counters." << endl;
     }
 }
-
 void saveBookCounters(int bookingCounter) {
     ofstream file("DataBasefiles/bookingcounters.txt");
     if (file.is_open()) {
@@ -45,7 +40,6 @@ void saveBookCounters(int bookingCounter) {
         cerr << "Error: Could not save counters." << endl;
     }
 }
-
 void loadGuestProfiles(const string &filename) {
     ifstream file("DataBasefiles/" + filename);  // Corrected path
     if (!file.is_open()) {
@@ -62,11 +56,11 @@ void loadGuestProfiles(const string &filename) {
         getline(ss, profile.password, ',');
         getline(ss, profile.email, ',');
         getline(ss, profile.phoneNumber);
-        guestProfiles[profile.userID] = profile;
+        // guestProfiles[profile.userID] = profile;
+        guestProfiles[profile.name] = profile;
     }
     file.close();
 }
-
 void loadRooms(const string &filename) {
     ifstream file("DataBasefiles/" + filename);  // Corrected path
     if (!file.is_open()) {
@@ -87,7 +81,6 @@ void loadRooms(const string &filename) {
     }
     file.close();
 }
-
 void loadReservations(const string &filename) {
     ifstream file("DataBasefiles/" + filename);  // Corrected path
     if (!file.is_open()) {
@@ -107,13 +100,10 @@ void loadReservations(const string &filename) {
         getline(ss, res.checkInDate, ',');
         getline(ss, res.checkOutDate, ',');
         ss >> res.totalPrice;
-        reservationHistory.push_back(res);
-
-        editReservationHistory [res.bookingID] = res;
+        reservationHistory [res.bookingID] = res;
     }
     file.close();
 }
-
 void saveRooms(const string &filename) {
     ofstream file("DataBasefiles/" + filename, ios::trunc);  // Corrected path
     if (!file.is_open()) {
@@ -128,18 +118,6 @@ void saveRooms(const string &filename) {
     }
     file.close();
 }
-
-void saveReservation(const string &filename, const Reservation &res) {
-    ofstream file("DataBasefiles/" + filename, ios::app);  // Corrected path
-    if (!file.is_open()) {
-        cerr << "Error: Could not open " << filename << endl;
-        return;
-    }
-    file << res.bookingID << "," << res.name << "," << res.userID << "," << res.roomID << "," << res.roomType << "," 
-         << res.checkInDate << "," << res.checkOutDate << "," << res.totalPrice << endl;
-    file.close();
-}
-
 void saveGuestProfiles(const string &filename) {
     ofstream file("DataBasefiles/" + filename, ios::trunc);  // Corrected path
     if (!file.is_open()) {
@@ -157,7 +135,6 @@ void saveGuestProfiles(const string &filename) {
     }
     file.close();
 }
-
 void saveBookingHistory(const string &filename) {
     ofstream file("DataBasefiles/" + filename, ios::trunc);  // Corrected path
     if (!file.is_open()) {
@@ -166,7 +143,7 @@ void saveBookingHistory(const string &filename) {
     }
 
     file <<"BookingID,UserName,UserID,RoomID,RoomType,CheckinDate,CheckoutDate,TotalPrice"<< endl;
-    for (const auto &entry : editReservationHistory) {
+    for (const auto &entry : reservationHistory) {
         const Reservation &res = entry.second;
         if (!res.bookingID.empty() && !res.name.empty() && !res.userID.empty() && !res.roomID.empty() && !res.roomType.empty() && !res.checkInDate.empty() && !res.checkOutDate.empty()) {
             file << res.bookingID << "," << res.name << "," << res.userID << "," << res.roomID << "," << res.roomType << "," 
@@ -175,7 +152,6 @@ void saveBookingHistory(const string &filename) {
     }
     file.close();
 }
-
 
 int calculateDays(const string &checkIn, const string &checkOut) {
     struct tm tmIn = {}, tmOut = {};
@@ -217,6 +193,62 @@ string generateID(const string &prefix, T counter) {
     return ss.str();
 }
 
+string loginUserName;
+void loginAccount() {
+    string userName;
+    string password;
+    cout << "Enter UserName: ";
+    cin >> userName;
+
+    if (guestProfiles.find(userName) != guestProfiles.end()) {
+        cout << "Enter Password: ";
+        cin >> password;
+        if (guestProfiles[userName].password == password) {
+            loginUserName = guestProfiles[userName].name;
+            int choice;
+            
+            do {
+                clearScreen();
+                cout << "\n" << string(40, '=') << endl;
+                cout << "Welcome To CADT HOTEL\n";
+                cout << string(40, '=') << endl;
+                cout << "1. View Account" << endl;
+                cout << "2. Update Account" << endl;
+                cout << "3. Check Available Rooms" << endl;
+                cout << "4. Book Room" << endl;
+                cout << "5. Edit Book" << endl;
+                cout << "6. View Booking History" << endl;
+                cout << "7. Exit" << endl;
+                cout << "Enter your choice: ";
+                cin >> choice;
+
+                switch (choice) {
+                    case 1: viewAccount(); break;
+                    case 2: updateAccount(); break;
+                    case 3: checkAvailableRooms(); break;
+                    case 4: bookRoom(); break;
+                    case 5: editBooking(); break;
+                    case 6: {
+                        string userID;
+                        cout << "Enter User ID: ";
+                        cin >> userID;
+                        viewBookingHistory(userID);
+                        break;
+                    }
+                    case 7: cout << "Exiting...\n"; break;
+                    default: cout << "Invalid choice! Please try again.\n";
+                }
+
+            } while (choice != 7);
+        } else {
+            cout << "Incorrect Password!" << endl;
+        }
+    } else {
+        cout << "User ID not found!" << endl;
+    }
+    system("pause");
+}
+
 void createAccount() {
     static int userCounter = 1;
     loadUserCounters(userCounter);
@@ -224,8 +256,17 @@ void createAccount() {
     GuestProfile profile;
     profile.userID = generateID("AID", userCounter++);
 
-    cout << "Enter Name: ";
-    cin >> profile.name;
+    do {
+        cout << "Enter Name: ";
+        cin >> profile.name;    
+        if (guestProfiles.find(profile.name) != guestProfiles.end()){
+            cout<<"Username Has Already Existed! Please try again."<< endl;
+        } else{
+          break;  
+        }
+    } while (true);
+    
+    
     cout << "Enter Password: ";
     cin >> profile.password;
     cout << "Enter Email: ";
@@ -233,7 +274,8 @@ void createAccount() {
     cout << "Enter Phone Number: ";
     cin >> profile.phoneNumber;
 
-    guestProfiles[profile.userID] = profile;
+    // guestProfiles[profile.userID] = profile;
+    guestProfiles[profile.name] = profile;
     cout << "Account created successfully! User ID: " << profile.userID << endl;
 
     saveGuestProfiles("guestprofile.csv");
@@ -242,23 +284,23 @@ void createAccount() {
 }
 
 void updateAccount() {
-    string userID;
+    string userName;
     string password;
-    cout << "Enter User ID to update: ";
-    cin >> userID;
+    cout << "Enter Username to update: ";
+    cin >> userName;
 
-    if (guestProfiles.find(userID) != guestProfiles.end()) {
+    if (guestProfiles.find(userName) != guestProfiles.end()) {
         cout << "Enter Password: ";
         cin >> password;
-        if (guestProfiles[userID].password == password) {
+        if (guestProfiles[userName].password == password) {
             cout << "Enter New Name: ";
-            cin >> guestProfiles[userID].name;
+            cin >> guestProfiles[userName].name;
             cout << "Enter New Password: ";
-            cin >> guestProfiles[userID].password;
+            cin >> guestProfiles[userName].password;
             cout << "Enter New Email: ";
-            cin >> guestProfiles[userID].email;
+            cin >> guestProfiles[userName].email;
             cout << "Enter New Phone Number: ";
-            cin >> guestProfiles[userID].phoneNumber;
+            cin >> guestProfiles[userName].phoneNumber;
             cout << "Account updated successfully!" << endl;
 
             saveGuestProfiles("guestprofile.csv");
@@ -272,26 +314,14 @@ void updateAccount() {
 }
 
 void viewAccount() {
-    string userID;
-    string password;
-    cout << "Enter User ID to view: ";
-    cin >> userID;
 
-    if (guestProfiles.find(userID) != guestProfiles.end()) {
-        cout << "Enter Password: ";
-        cin >> password;
-        if (guestProfiles[userID].password == password) {
-            GuestProfile &profile = guestProfiles[userID];
+    if (guestProfiles.find(loginUserName) != guestProfiles.end()) {
+            GuestProfile &profile = guestProfiles[loginUserName];
             cout << "User ID: " << profile.userID << endl;
             cout << "Name: " << profile.name << endl;
             cout << "Email: " << profile.email << endl;
             cout << "Phone Number: " << profile.phoneNumber << endl;
-        } else {
-            cout << "Incorrect Password!" << endl;
-        }
-    } else {
-        cout << "User ID not found!" << endl;
-    }
+    };
     system("pause");
 }
 
@@ -305,7 +335,7 @@ void checkAvailableRooms() {
     for (const auto &room : roomDatabase) {
         if (room.second.status == "available") {
             cout << room.second.roomID << "\t" << room.second.roomType << "\t" << room.second.price << endl;
-            hasAvailableRooms = false;
+            hasAvailableRooms = true;
         }
     }
 
@@ -323,14 +353,14 @@ void checkAvailableRooms() {
 void bookRoom() {
     static int bookingCounter = 1;
     loadBookCounters(bookingCounter);
-    Reservation res;
+    Reservation ress;
 
-    cout << "Enter UserID: ";
-    cin >> res.userID;
+    cout << "Enter Username: ";
+    cin >> ress.name;
 
-    if (guestProfiles.find(res.userID) != guestProfiles.end()) {
-        res.name = guestProfiles[res.userID].name;
-        cout << "User Name: " << res.name << endl;
+    if (guestProfiles.find(ress.name) != guestProfiles.end()) {
+        ress.name = guestProfiles[ress.name].name;
+        cout << "User Name: " << ress.name << endl;
     } else {
         cout << "UserID not found! Please make sure the UserID is correct." << endl;
         system("pause");
@@ -338,46 +368,47 @@ void bookRoom() {
     }
 
     cout << "Enter Check-In Date (dd-mm-yyyy):"<< endl;
-    res.checkInDate = getDateInput();
+    ress.checkInDate = getDateInput();
     cout << "Enter Check-Out Date (dd-mm-yyyy):"<< endl;
-    res.checkOutDate = getDateInput();
+    ress.checkOutDate = getDateInput();
 
     clearScreen();
     cout << "Available Rooms:\n";
     checkAvailableRooms();
 
     cout << "Enter Room ID to book: ";
-    cin >> res.roomID;
+    cin >> ress.roomID;
 
-    if (roomDatabase.find(res.roomID) != roomDatabase.end() && roomDatabase[res.roomID].status == "available") {
-        res.roomType = roomDatabase[res.roomID].roomType;
+    if (roomDatabase.find(ress.roomID) != roomDatabase.end() && roomDatabase[ress.roomID].status == "available") {
+        ress.roomType = roomDatabase[ress.roomID].roomType;
 
         // Calculate the total price based on days
-        int totalDays = calculateDays(res.checkInDate, res.checkOutDate);
-        res.totalPrice = roomDatabase[res.roomID].price * totalDays;
-        res.bookingID = generateID("BID", bookingCounter++);
+        int totalDays = calculateDays(ress.checkInDate, ress.checkOutDate);
+        ress.totalPrice = roomDatabase[ress.roomID].price * totalDays;
+        ress.bookingID = generateID("BID", bookingCounter++);
 
-        roomDatabase[res.roomID].status = "unavailable";
-        editReservationHistory[res.bookingID] = res;
-
-        reservationHistory.push_back(res);
-        saveReservation("Reservation.csv", res);
-
-        saveRooms("room.csv");
-        saveBookCounters(bookingCounter);
+        roomDatabase[ress.roomID].status = "unavailable";
 
         clearScreen();
         cout << "Booking Successful!\n";
         cout << string(40, '-') << endl;
         cout << "Invoice:\n";
-        cout << "Booking ID: " << res.bookingID << endl;
-        cout << "Name: " << res.name << endl;
-        cout << "Room ID: " << res.roomID << endl;
-        cout << "Room Type: " << res.roomType << endl;
-        cout << "Check-In Date: " << res.checkInDate << endl;
-        cout << "Check-Out Date: " << res.checkOutDate << endl;
+        cout << "Booking ID: " << ress.bookingID << endl;
+        cout << "Name: " << ress.name << endl;
+        cout << "Room ID: " << ress.roomID << endl;
+        cout << "Room Type: " << ress.roomType << endl;
+        cout << "Check-In Date: " << ress.checkInDate << endl;
+        cout << "Check-Out Date: " << ress.checkOutDate << endl;
         cout << "Total Days: " << totalDays << endl;
-        cout << "Total Price: $" << fixed << setprecision(2) << res.totalPrice << endl;
+        cout << "Total Price: $" << fixed << setprecision(2) << ress.totalPrice << endl;
+        // saving
+        reservationHistory[ress.bookingID] = ress;
+        cout << "Added reservation with ID: " << ress.bookingID << endl;
+        cout << "Current number of reservations: " << reservationHistory.size() << endl;
+        // Save updated data
+        saveRooms("Room.csv");
+        saveBookingHistory("Reservation.csv");
+        saveBookCounters(bookingCounter);
         cout << string(40, '-') << endl;
     } else {
         cout << "Room not available or invalid Room ID!" << endl;
@@ -391,11 +422,9 @@ void editBooking() {
     cout << "Enter Booking ID to edit: ";
     cin >> bookingID;
 
-    // Search for the booking in reservationHistory using unordered_map
-  // Use unordered_map for faster lookup
-    auto it = editReservationHistory.find(bookingID);
-    if (it != editReservationHistory.end()) {
-        Reservation &res = it->second;  // Get the reservation from the map
+    auto it = reservationHistory.find(bookingID);
+    if (it != reservationHistory.end()) {
+        Reservation &res = it->second; 
 
         cout << "Booking found!\n";
         cout << "Current Details:\n";
@@ -460,7 +489,7 @@ void editBooking() {
         res.totalPrice = roomDatabase[res.roomID].price * totalDays;
 
         // Save updated data
-        saveRooms("room.csv");
+        saveRooms("Room.csv");
         saveBookingHistory("Reservation.csv");
 
         cout << "Booking updated successfully!\n";
@@ -486,9 +515,9 @@ void viewBookingHistory(const string &userID) {
     cout << "Booking ID\tRoom ID\tRoom Type\tPrice\n";
     cout << string(40, '-') << endl;
     for (const auto &res : reservationHistory) {
-        if (res.userID == userID) {
-            cout << res.bookingID << "\t" << res.roomID << "\t" << res.roomType << "\t$" 
-                 << fixed << setprecision(2) << res.totalPrice << endl;
+        if (res.second.userID == userID) {
+            cout << res.second.bookingID << "\t" << res.second.roomID << "\t" << res.second.roomType << "\t$" 
+                 << fixed << setprecision(2) << res.second.totalPrice << endl;
         }
     }
     cout << string(40, '-') << endl;
@@ -496,46 +525,26 @@ void viewBookingHistory(const string &userID) {
 }
 
 void displayGuestMenu() {
-    
-    // Load data from CSV files into memory
-    loadRooms("room.csv");
-    loadReservations("Reservation.csv");
-    loadGuestProfiles("guestprofile.csv");
+    int choice1;
 
-    int choice;
-    do {
-        clearScreen();
+    do
+    {
+        system("cls");
         cout << "\n" << string(40, '=') << endl;
-        cout << "Hotel Management System:\n";
+        cout << "Welcome To CADT HOTEL\n";
         cout << string(40, '=') << endl;
-        cout << "1. Create Account" << endl;
-        cout << "2. Update Account" << endl;
-        cout << "3. View Account" << endl;
-        cout << "4. Check Available Rooms" << endl;
-        cout << "5. Book Room" << endl;
-        cout << "6. Edit Book" << endl;
-        cout << "7. View Booking History" << endl;
-        cout << "8. Exit" << endl;
-        cout << "Enter your choice: ";
-        cin >> choice;
+        cout<< "1. Login Account\n2. Create New Account"<< endl;
+        cout<< "Choose Menu: ";
+        cin >> choice1;
 
-        switch (choice) {
-            case 1: createAccount(); break;
-            case 2: updateAccount(); break;
-            case 3: viewAccount(); break;
-            case 4: checkAvailableRooms(); break;
-            case 5: bookRoom(); break;
-            case 6: editBooking(); break;
-            case 7: {
-                string userID;
-                cout << "Enter User ID: ";
-                cin >> userID;
-                viewBookingHistory(userID);
-                break;
-            }
-            case 8: cout << "Exiting...\n"; break;
+        switch (choice1){
+            case 1: loginAccount(); break;
+            case 2: createAccount(); break;
+            case 3: cout << "Exiting...\n"; break;
             default: cout << "Invalid choice! Please try again.\n";
         }
-
-    } while (choice != 8);
+    } while (choice1 != 3);
+    
+    
+        
 }
