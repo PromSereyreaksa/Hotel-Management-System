@@ -58,6 +58,17 @@
   "C_Cpp_Runner.msvcSecureNoWarnings": false,
   "files.associations": {
     "ostream": "cpp",
+<<<<<<< Updated upstream
     "iomanip": "cpp"
+=======
+    "iostream": "cpp",
+    "iomanip": "cpp",
+    "cstdlib": "cpp",
+    "iosfwd": "cpp",
+    "fstream": "cpp",
+    "limits": "cpp",
+    "array": "cpp",
+    "typeinfo": "cpp"
+>>>>>>> Stashed changes
   }
 }

@@ -56,7 +56,10 @@ void loadGuestProfiles(const string &filename) {
         getline(ss, profile.password, ',');
         getline(ss, profile.email, ',');
         getline(ss, profile.phoneNumber);
+<<<<<<< Updated upstream
         // guestProfiles[profile.userID] = profile;
+=======
+>>>>>>> Stashed changes
         guestProfiles[profile.name] = profile;
     }
     file.close();
@@ -193,7 +196,10 @@ string generateID(const string &prefix, T counter) {
     return ss.str();
 }
 
+<<<<<<< Updated upstream
 string loginUserName;
+=======
+>>>>>>> Stashed changes
 void loginAccount() {
     string userName;
     string password;
@@ -204,12 +210,16 @@ void loginAccount() {
         cout << "Enter Password: ";
         cin >> password;
         if (guestProfiles[userName].password == password) {
+<<<<<<< Updated upstream
             loginUserName = guestProfiles[userName].name;
+=======
+>>>>>>> Stashed changes
             int choice;
             
             do {
                 clearScreen();
                 cout << "\n" << string(40, '=') << endl;
+<<<<<<< Updated upstream
                 cout << "Welcome To CADT HOTEL\n";
                 cout << string(40, '=') << endl;
                 cout << "1. View Account" << endl;
@@ -219,27 +229,57 @@ void loginAccount() {
                 cout << "5. Edit Book" << endl;
                 cout << "6. View Booking History" << endl;
                 cout << "7. Exit" << endl;
+=======
+                cout << "Hotel Management System:\n";
+                cout << string(40, '=') << endl;
+                cout << "1. Create Account" << endl;
+                cout << "2. Update Account" << endl;
+                cout << "3. View Account" << endl;
+                cout << "4. Check Available Rooms" << endl;
+                cout << "5. Book Room" << endl;
+                cout << "6. Edit Book" << endl;
+                cout << "7. View Booking History" << endl;
+                cout << "8. Exit" << endl;
+>>>>>>> Stashed changes
                 cout << "Enter your choice: ";
                 cin >> choice;
 
                 switch (choice) {
+<<<<<<< Updated upstream
                     case 1: viewAccount(); break;
                     case 2: updateAccount(); break;
                     case 3: checkAvailableRooms(); break;
                     case 4: bookRoom(); break;
                     case 5: editBooking(); break;
                     case 6: {
+=======
+                    case 1: createAccount(); break;
+                    case 2: updateAccount(); break;
+                    case 3: viewAccount(); break;
+                    case 4: checkAvailableRooms(); break;
+                    case 5: bookRoom(); break;
+                    case 6: editBooking(); break;
+                    case 7: {
+>>>>>>> Stashed changes
                         string userID;
                         cout << "Enter User ID: ";
                         cin >> userID;
                         viewBookingHistory(userID);
                         break;
                     }
+<<<<<<< Updated upstream
                     case 7: cout << "Exiting...\n"; break;
                     default: cout << "Invalid choice! Please try again.\n";
                 }
 
             } while (choice != 7);
+=======
+                    case 8: cout << "Exiting...\n"; break;
+                    default: cout << "Invalid choice! Please try again.\n";
+                }
+
+            } while (choice != 8);
+>>>>>>> Stashed changes
         } else {
             cout << "Incorrect Password!" << endl;
         }
@@ -525,6 +565,7 @@ void viewBookingHistory(const string &userID) {
 }
 
 void displayGuestMenu() {
+<<<<<<< Updated upstream
     int choice1;
 
     do
@@ -548,3 +589,26 @@ void displayGuestMenu() {
     
         
 }
+=======
+    
+    
+
+    int choice1;
+    cout << "\n" << string(40, '=') << endl;
+    cout<< "1. Login Profile\n  2 ";
+    cout<< "Choose Menu: ";
+    cin >> choice1;
+
+    switch (choice1){
+        case 1:
+            loginAccount();
+            break;
+        case 2:
+            createAccount();
+            break;
+        default:
+            break;
+    }
+        
+}
+>>>>>>> Stashed changes
